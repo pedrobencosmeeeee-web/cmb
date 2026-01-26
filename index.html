@@ -15,13 +15,14 @@
             font-family: 'Inter', sans-serif; 
             scroll-behavior: smooth; 
         }
+        /* FIX: Changed from white (invisible) to dark slate for visibility on light bg */
         .blueprint-pattern {
-            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(71, 85, 105, 0.15) 1px, transparent 1px);
             background-size: 30px 30px;
         }
         .glass-effect {
-            /* Updated to specific bluish-gray #99adc4 with slight transparency */
-            background: rgba(153, 173, 196, 0.95); 
+            /* FIX: Lowered opacity from 0.95 to 0.85 for better glass effect */
+            background: rgba(153, 173, 196, 0.85); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
@@ -57,10 +58,65 @@
             box-shadow: 0 10px 15px -3px rgba(71, 85, 105, 0.3);
         }
         
-       
+        /* Calculator Specific Styles */
+        .calc-card {
+            background: white;
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #1E40AF;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .radio-option {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .radio-option.active {
+            background: #1E40AF;
+            color: white;
+            border-color: #1E40AF;
+        }
+        .radio-option input { display: none; }
+        
+        /* Disabled state for options */
+        .radio-option.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #94a3b8;
+        }
+
+        .calc-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-900">
+<body class="bg-slate-100 text-slate-900 blueprint-pattern">
 
     <!-- Navigation (Header with #99adc4 Background) -->
     <nav class="sticky top-0 z-50 glass-effect border-b border-slate-400">
@@ -69,7 +125,7 @@
                 <!-- Brand Banner Image Slot -->
                 <a href="#" class="flex items-center h-full py-0 relative z-50"> 
                     <img src="header-banner.png" alt="CMB Fire Protection" class="h-full w-auto object-contain logo-blend" 
-                         onerror="const p=this.parentElement; if(p){p.style.display='none'; if(p.nextElementSibling)p.nextElementSibling.style.display='flex';}">
+                          onerror="const p=this.parentElement; if(p){p.style.display='none'; if(p.nextElementSibling)p.nextElementSibling.style.display='flex';}">
                 </a>
 
                 <!-- Fallback if Image Missing -->
@@ -84,6 +140,7 @@
                 <div class="hidden md:flex items-center space-x-10">
                     <a href="#services" class="text-slate-800 hover:text-blue-900 font-bold uppercase text-[15px] tracking-widest transition">Services</a>
                     <a href="#process" class="text-slate-800 hover:text-blue-900 font-bold uppercase text-[15px] tracking-widest transition">Process</a>
+                    <a href="#estimator" class="text-slate-800 hover:text-blue-900 font-bold uppercase text-[15px] tracking-widest transition">Estimate</a>
                     <a href="#contact" class="brand-gradient text-white px-10 py-4 rounded-xl font-black uppercase text-sm tracking-widest hover:brightness-110 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5">
                         Get Quote
                     </a>
@@ -102,6 +159,7 @@
         <div id="mobile-menu" class="hidden md:hidden bg-slate-100 border-t border-slate-300 p-8 space-y-6 shadow-2xl">
             <a href="#services" class="block text-xl font-black text-slate-900 uppercase tracking-tighter hover:text-blue-800 transition">Services</a>
             <a href="#process" class="block text-xl font-black text-slate-900 uppercase tracking-tighter hover:text-blue-800 transition">Our Process</a>
+            <a href="#estimator" class="block text-xl font-black text-slate-900 uppercase tracking-tighter hover:text-blue-800 transition">Estimate</a>
             <a href="#contact" class="block w-full brand-gradient text-white text-center py-5 rounded-xl font-black uppercase tracking-widest">Request Quote</a>
         </div>
     </nav>
@@ -280,8 +338,104 @@
         </div>
     </section>
 
+    <!-- NEW SECTION: Design Estimator -->
+    <section id="estimator" class="py-32 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="mb-16 text-center">
+                 <h2 class="text-5xl font-black text-slate-900 uppercase tracking-tighter">Instant Estimate</h2>
+                 <div class="h-2 w-24 brand-gradient mt-6 rounded-full mx-auto"></div>
+                 <p class="text-slate-600 max-w-2xl mx-auto mt-6 font-medium italic">
+                    Calculate a preliminary cost range for your fire protection layout needs immediately.
+                 </p>
+            </div>
+
+            <div class="flex justify-center">
+                <!-- Calculator Component -->
+                <div class="calc-card w-full max-w-xl p-8 md:p-12">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase">Design Estimator</h2>
+                        <div class="h-1.5 w-16 brand-gradient mt-2 rounded-full"></div>
+                    </div>
+            
+                    <div class="space-y-6">
+                        <!-- Building Type Dropdown -->
+                        <div class="space-y-3">
+                            <label class="block font-black text-[10px] uppercase tracking-widest text-slate-400">Building Classification</label>
+                            <div class="relative">
+                                <select id="building-select" class="calc-select w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition cursor-pointer">
+                                    <option value="1.0">Residential (Single/Multi-family)</option>
+                                    <option value="1.25">Mixed-Use Development</option>
+                                    <option value="1.4">Commercial (Office/Retail)</option>
+                                    <option value="1.5">Warehouse / Storage Facility</option>
+                                    <option value="1.7">Industrial / High-Hazard</option>
+                                </select>
+                            </div>
+                        </div>
+            
+                        <!-- Square Footage -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end">
+                                <label class="font-black text-[10px] uppercase tracking-widest text-slate-400">Total System Area</label>
+                                <div>
+                                    <span class="text-3xl font-black text-slate-900" id="sqft-display">10,000</span>
+                                    <span class="text-[10px] font-black text-slate-400 uppercase ml-1">SQFT</span>
+                                </div>
+                            </div>
+                            <input type="range" id="sqft-slider" min="500" max="100000" step="500" value="10000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-700">
+                        </div>
+            
+                        <!-- Standard Selection -->
+                        <div class="space-y-3">
+                            <label class="block font-black text-[10px] uppercase tracking-widest text-slate-400">System Standard</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <label class="radio-option standard-type active" data-val="0.85">
+                                    <input type="radio" name="standard" checked> NFPA 13D
+                                </label>
+                                <label class="radio-option standard-type" data-val="1.0">
+                                    <input type="radio" name="standard"> NFPA 13R
+                                </label>
+                                <label class="radio-option standard-type" data-val="1.4">
+                                    <input type="radio" name="standard"> NFPA 13
+                                </label>
+                            </div>
+                        </div>
+            
+                        <!-- Add-ons -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex items-center justify-between p-4 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-slate-700 text-[10px] uppercase">PE Seal</span>
+                                    <span class="text-[8px] text-slate-400 font-bold uppercase">Stamped Review</span>
+                                </div>
+                                <input type="checkbox" id="pe-seal" class="w-5 h-5 rounded accent-blue-700">
+                            </label>
+                            <label class="flex items-center justify-between p-4 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-slate-700 text-[10px] uppercase">48H Rush</span>
+                                    <span class="text-[8px] text-blue-600 font-black tracking-tighter uppercase">Guaranteed</span>
+                                </div>
+                                <input type="checkbox" id="rush" class="w-5 h-5 rounded accent-blue-700">
+                            </label>
+                        </div>
+            
+                        <!-- Result -->
+                        <div class="brand-gradient rounded-3xl p-8 text-center shadow-xl">
+                            <p class="text-[9px] font-black uppercase tracking-[0.4em] text-white/60 mb-1">Estimated Layout Fee</p>
+                            <p class="text-5xl font-black text-white tracking-tighter" id="final-price">$0.00</p>
+                            <p id="breakdown" class="text-[8px] uppercase tracking-widest text-blue-200 mt-3 font-bold"></p>
+                        </div>
+            
+                        <p class="text-[9px] text-slate-400 text-center uppercase tracking-widest leading-relaxed">
+                            *Preliminary estimate only. Final pricing based on <br> architectural complexity and AHJ requirements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
-    <section id="contact" class="py-40 bg-slate-100 text-slate-900">
+    <section id="contact" class="py-40 bg-slate-100 text-slate-900 border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-24 items-center">
             <div>
                 <h2 class="text-6xl font-black text-slate-900 uppercase tracking-tighter mb-10 leading-[0.9]">Start Your <br><span class="text-blue-800">Project</span></h2>
@@ -310,13 +464,6 @@
 
             <!-- Professional Intake Form (Google Forms Embed) -->
             <div class="bg-white p-4 rounded-[3rem] border border-slate-300 shadow-inner h-[800px] overflow-hidden">
-                <!-- 
-                    GOOGLE FORMS EMBED INSTRUCTIONS:
-                    1. Create your Google Form with a File Upload question.
-                    2. Click "Send" -> "<>" (Embed HTML).
-                    3. Copy the URL inside 'src="..."'.
-                    4. Paste that URL into the 'src' attribute below.
-                -->
                 <iframe 
                     src="https://docs.google.com/forms/d/e/1FAIpQLSdRnDmU2tKHfqm8SKFWdqerHGblIsUFkrDwBfOzRjsWimEgXQ/viewform?embedded=true" 
                     width="100%" 
@@ -338,7 +485,7 @@
                 <!-- Footer Logo -->
                 <div class="p-4 rounded-xl mb-8 shadow-lg" style="background-color: #99adc4;">
                     <img src="logo.png" alt="CMB Fire Protection" class="h-24 w-auto object-contain logo-blend" 
-                         onerror="const p=this.parentElement; if(p){p.style.display='none'; if(p.nextElementSibling)p.nextElementSibling.style.display='block';}">
+                          onerror="const p=this.parentElement; if(p){p.style.display='none'; if(p.nextElementSibling)p.nextElementSibling.style.display='block';}">
                 </div>
                 <div class="hidden bg-blue-800 p-2 rounded-lg mb-6">
                     <i data-lucide="shield" class="h-8 w-8 text-white"></i>
@@ -374,6 +521,109 @@
                 menu.classList.add('hidden');
             });
         });
+
+        // --- CALCULATOR LOGIC ---
+        const slider = document.getElementById('sqft-slider');
+        const display = document.getElementById('sqft-display');
+        const buildingSelect = document.getElementById('building-select');
+        const peSeal = document.getElementById('pe-seal');
+        const rush = document.getElementById('rush');
+        const finalPrice = document.getElementById('final-price');
+        const breakdown = document.getElementById('breakdown');
+        
+        const standardRadios = document.querySelectorAll('.standard-type');
+
+        // References to specific standard options
+        const opt13d = document.querySelector('label[data-val="0.85"]');
+        const opt13r = document.querySelector('label[data-val="1.0"]');
+        const opt13 = document.querySelector('label[data-val="1.4"]');
+
+        let standardMultiplier = 0.85;
+
+        // Handle Standard selection
+        standardRadios.forEach(r => {
+            r.addEventListener('click', () => {
+                if(r.classList.contains('disabled')) return; // Prevent clicking disabled
+                
+                standardRadios.forEach(x => x.classList.remove('active'));
+                r.classList.add('active');
+                r.querySelector('input').checked = true;
+                standardMultiplier = parseFloat(r.dataset.val);
+                calculate();
+            });
+        });
+
+        function updateOptions() {
+            const isResidential = buildingSelect.value === '1.0';
+            
+            if (!isResidential) {
+                // Disable 13D and 13R
+                [opt13d, opt13r].forEach(el => {
+                    el.classList.add('disabled');
+                    el.querySelector('input').disabled = true;
+                });
+                
+                // If we are currently on 13D or 13R, switch to 13
+                if (opt13d.classList.contains('active') || opt13r.classList.contains('active')) {
+                     // Manually set 13 active
+                    standardRadios.forEach(x => x.classList.remove('active'));
+                    opt13.classList.add('active');
+                    opt13.querySelector('input').checked = true;
+                    standardMultiplier = parseFloat(opt13.dataset.val);
+                }
+            } else {
+                // Enable All
+                 [opt13d, opt13r].forEach(el => {
+                    el.classList.remove('disabled');
+                    el.querySelector('input').disabled = false;
+                });
+            }
+        }
+
+        function calculate() {
+            const sqft = parseInt(slider.value);
+            const buildingMultiplier = parseFloat(buildingSelect.value);
+            display.innerText = sqft.toLocaleString();
+
+            // Updated Pricing Logic (More Attractive)
+            let baseRate = 0.15; // Started at 0.18
+            if (sqft > 15000) baseRate = 0.12; 
+            if (sqft > 40000) baseRate = 0.09;
+
+            // Combine base rate, building type complexity, and system standard
+            let total = (sqft * baseRate) * buildingMultiplier * standardMultiplier;
+            
+            // Reduced Minimum project fee
+            if (total < 550) total = 550;
+
+            let notes = [];
+            if (peSeal.checked) { 
+                total += 950; // Reduced from 1250
+                notes.push("PE Review Included"); 
+            }
+            if (rush.checked) { 
+                total *= 1.25; // Reduced from 1.45
+                notes.push("48-Hour Priority Rush"); 
+            }
+
+            finalPrice.innerText = "$" + total.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            breakdown.innerText = notes.join(" • ");
+        }
+
+        slider.oninput = calculate;
+        buildingSelect.onchange = () => {
+            updateOptions();
+            calculate();
+        };
+        peSeal.onchange = calculate;
+        rush.onchange = calculate;
+        
+        // Initial Calculation
+        updateOptions();
+        calculate();
     </script>
 </body>
 
