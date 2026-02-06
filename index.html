@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMB Fire Protection | NICET Level III Layouts & PE Review</title>
+    <title>CMB Fire Protection | Fire Protection Layouts & PE Review</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter -->
@@ -15,13 +15,14 @@
             font-family: 'Inter', sans-serif; 
             scroll-behavior: smooth; 
         }
+        /* FIX: Changed from white (invisible) to dark slate for visibility on light bg */
         .blueprint-pattern {
-            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(71, 85, 105, 0.15) 1px, transparent 1px);
             background-size: 30px 30px;
         }
         .glass-effect {
-            /* Updated to specific bluish-gray #99adc4 with slight transparency */
-            background: rgba(153, 173, 196, 0.95); 
+            /* FIX: Lowered opacity from 0.95 to 0.85 for better glass effect */
+            background: rgba(153, 173, 196, 0.85); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
@@ -57,10 +58,84 @@
             box-shadow: 0 10px 15px -3px rgba(71, 85, 105, 0.3);
         }
         
-       
+        /* Calculator Specific Styles */
+        .calc-card {
+            background: white;
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #1E40AF;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .radio-option {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .radio-option.active {
+            background: #1E40AF;
+            color: white;
+            border-color: #1E40AF;
+        }
+        .radio-option input { display: none; }
+        
+        /* Disabled state for options */
+        .radio-option.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #94a3b8;
+        }
+
+        .calc-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        /* PRINT STYLES - Hides website, shows report */
+        @media print {
+            body { background-color: white; padding: 0; }
+            nav, header, #services, #process, #contact, footer, .report-toolbar, #estimator .mb-16, .calc-card { display: none !important; }
+            
+            #quote-template {
+                display: block !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-900">
+<body class="bg-slate-100 text-slate-900 blueprint-pattern">
 
     <!-- Navigation (Header with #99adc4 Background) -->
     <nav class="sticky top-0 z-50 glass-effect border-b border-slate-400">
@@ -69,7 +144,7 @@
                 <!-- Brand Banner Image Slot -->
                 <a href="#" class="flex items-center h-full py-0 relative z-50"> 
                     <img src="header-banner.png" alt="CMB Fire Protection" class="h-full w-auto object-contain logo-blend" 
-                         onerror="const p=this.parentElement; if(p){p.style.display='none'; if(p.nextElementSibling)p.nextElementSibling.style.display='flex';}">
+                          onerror="const p=this.parentElement; if(p){p.style.display='none'; if(p.nextElementSibling)p.nextElementSibling.style.display='flex';}">
                 </a>
 
                 <!-- Fallback if Image Missing -->
@@ -84,7 +159,9 @@
                 <div class="hidden md:flex items-center space-x-10">
                     <a href="#services" class="text-slate-800 hover:text-blue-900 font-bold uppercase text-[15px] tracking-widest transition">Services</a>
                     <a href="#process" class="text-slate-800 hover:text-blue-900 font-bold uppercase text-[15px] tracking-widest transition">Process</a>
-                    <a href="#contact" class="brand-gradient text-white px-10 py-4 rounded-xl font-black uppercase text-sm tracking-widest hover:brightness-110 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5">
+                    <!-- Updated Link to Estimator -->
+                    <a href="#estimator" class="text-slate-800 hover:text-blue-900 font-bold uppercase text-[15px] tracking-widest transition">Estimate</a>
+                    <a href="#estimator" class="brand-gradient text-white px-10 py-4 rounded-xl font-black uppercase text-sm tracking-widest hover:brightness-110 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5">
                         Get Quote
                     </a>
                 </div>
@@ -102,7 +179,8 @@
         <div id="mobile-menu" class="hidden md:hidden bg-slate-100 border-t border-slate-300 p-8 space-y-6 shadow-2xl">
             <a href="#services" class="block text-xl font-black text-slate-900 uppercase tracking-tighter hover:text-blue-800 transition">Services</a>
             <a href="#process" class="block text-xl font-black text-slate-900 uppercase tracking-tighter hover:text-blue-800 transition">Our Process</a>
-            <a href="#contact" class="block w-full brand-gradient text-white text-center py-5 rounded-xl font-black uppercase tracking-widest">Request Quote</a>
+            <a href="#estimator" class="block text-xl font-black text-slate-900 uppercase tracking-tighter hover:text-blue-800 transition">Estimate</a>
+            <a href="#estimator" class="block w-full brand-gradient text-white text-center py-5 rounded-xl font-black uppercase tracking-widest">Get Quote</a>
         </div>
     </nav>
 
@@ -280,53 +358,183 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-40 bg-slate-100 text-slate-900">
-        <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-24 items-center">
-            <div>
-                <h2 class="text-6xl font-black text-slate-900 uppercase tracking-tighter mb-10 leading-[0.9]">Start Your <br><span class="text-blue-800">Project</span></h2>
-                
-                <p class="text-xl text-slate-500 mb-16 leading-relaxed font-medium">
-                    Submit your project requirements today for a technical layout estimate. Our team provides expedited, code-compliant fire protection submittal packages coordinated for Professional Engineer review to streamline the permit process.
-                </p>
-                
-                <div class="space-y-10">
-                    <div class="flex items-start space-x-6">
-                        <div class="bg-white p-5 rounded-2xl text-slate-700 shadow-sm border border-slate-200"><i data-lucide="mail" size="32"></i></div>
-                        <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Direct Communication:</p>
-                            <p class="text-2xl font-black text-slate-900 tracking-tight">gperalta@cmbfireprotection.com</p>
-                        </div>
+    <!-- NEW SECTION: Design Estimator -->
+    <section id="estimator" class="py-32 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="mb-16 text-center">
+                 <h2 class="text-5xl font-black text-slate-900 uppercase tracking-tighter">Instant Estimate</h2>
+                 <div class="h-2 w-24 brand-gradient mt-6 rounded-full mx-auto"></div>
+                 <p class="text-slate-600 max-w-2xl mx-auto mt-6 font-medium italic">
+                    Calculate a preliminary cost range for your fire protection layout needs immediately.
+                 </p>
+            </div>
+
+            <div class="flex justify-center">
+                <!-- Calculator Component -->
+                <div class="calc-card w-full max-w-xl p-8 md:p-12">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase">Design Estimator</h2>
+                        <div class="h-1.5 w-16 brand-gradient mt-2 rounded-full"></div>
                     </div>
-                    <div class="flex items-start space-x-6">
-                        <div class="bg-blue-50 p-5 rounded-2xl text-blue-700 shadow-sm border border-blue-100"><i data-lucide="phone" size="32"></i></div>
+            
+                    <div class="space-y-6">
+                        
+                        <!-- Main Input (Head Count) -->
                         <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Inquiry Hotline:</p>
-                            <p class="text-2xl font-black text-slate-900 tracking-tight">732-343-5828</p>
+                            <label class="block font-black text-[10px] uppercase tracking-widest text-slate-400 mb-2">Total Head Count</label>
+                            <div class="relative group">
+                                <!-- Target Icon -->
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-focus-within:text-blue-600 transition-colors flex items-center justify-center">
+                                    <i data-lucide="target"></i>
+                                </div>
+                                <input type="number" id="head-count" placeholder="e.g. 50" class="w-full pl-12 pr-16 py-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder:font-normal placeholder:text-slate-300" min="0">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 text-xs font-bold pointer-events-none">HEADS</span>
+                            </div>
                         </div>
+            
+                        <!-- Standard Selection -->
+                        <div class="space-y-3">
+                            <label class="block font-black text-[10px] uppercase tracking-widest text-slate-400">System Standard</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <label class="radio-option standard-type active" data-val="13d">
+                                    <input type="radio" name="standard" value="13d" checked> NFPA 13D
+                                </label>
+                                <label class="radio-option standard-type" data-val="13r">
+                                    <input type="radio" name="standard" value="13r"> NFPA 13R
+                                </label>
+                                <label class="radio-option standard-type" data-val="13">
+                                    <input type="radio" name="standard" value="13"> NFPA 13
+                                </label>
+                            </div>
+                        </div>
+            
+                        <!-- Add-ons -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex items-center justify-between p-4 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-slate-700 text-[10px] uppercase">PE Seal</span>
+                                    <span class="text-[8px] text-slate-400 font-bold uppercase">Stamped Review</span>
+                                </div>
+                                <input type="checkbox" id="pe-seal" class="w-5 h-5 rounded accent-blue-700">
+                            </label>
+                            <label class="flex items-center justify-between p-4 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-slate-700 text-[10px] uppercase">48H Rush</span>
+                                    <span id="rush-text" class="text-[8px] text-blue-600 font-black tracking-tighter uppercase">Guaranteed</span>
+                                </div>
+                                <input type="checkbox" id="rush" class="w-5 h-5 rounded accent-blue-700">
+                            </label>
+                        </div>
+            
+                        <!-- Result -->
+                        <div class="brand-gradient rounded-3xl p-8 text-center shadow-xl">
+                            <p class="text-[9px] font-black uppercase tracking-[0.4em] text-white/60 mb-1">Estimated Layout Fee</p>
+                            <p class="text-5xl font-black text-white tracking-tighter" id="final-price">$0.00</p>
+                            <p id="breakdown" class="text-[8px] uppercase tracking-widest text-blue-200 mt-3 font-bold"></p>
+                            <!-- NEW: Generate Report Button -->
+                            <button onclick="viewReport()" class="mt-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition flex items-center justify-center gap-2 mx-auto backdrop-blur-sm">
+                                <i data-lucide="printer" class="w-3 h-3"></i> Generate Official Quote
+                            </button>
+                        </div>
+            
+                        <p class="text-[9px] text-slate-400 text-center uppercase tracking-widest leading-relaxed">
+                            *Preliminary estimate only. Final pricing based on <br> architectural complexity and AHJ requirements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Template (Hidden) -->
+    <div id="quote-template" class="hidden fixed inset-0 bg-slate-50 overflow-auto z-50">
+        <!-- Toolbar -->
+        <div class="report-toolbar sticky top-0 bg-slate-900 text-white p-4 shadow-lg flex justify-between items-center z-50">
+            <button onclick="closeReport()" class="flex items-center gap-2 text-sm font-bold text-slate-300 hover:text-white transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+            </button>
+            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow-lg">
+                <i data-lucide="printer" class="w-4 h-4"></i> Print / PDF
+            </button>
+        </div>
+
+        <div class="max-w-3xl mx-auto font-sans text-slate-800 bg-white shadow-2xl my-8 p-12 min-h-[1000px]">
+            <!-- Header -->
+            <div class="flex justify-between items-end border-b-2 border-slate-800 pb-6 mb-8">
+                <div>
+                    <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900">Project Quote</h1>
+                    <p class="text-slate-500 font-medium mt-1">CMB Fire Protection Services</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-wider">Date</p>
+                    <p id="quote-date" class="text-lg font-bold">Today</p>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="bg-slate-50 p-6 rounded-lg mb-8 border border-slate-100">
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">System Type</p>
+                        <p id="quote-standard" class="font-bold text-xl text-slate-800">NFPA 13D</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Scope</p>
+                        <p class="font-bold text-xl text-slate-800"><span id="quote-scope">0</span> Heads</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Professional Intake Form (Google Forms Embed) -->
-            <div class="bg-white p-4 rounded-[3rem] border border-slate-300 shadow-inner h-[800px] overflow-hidden">
-                <!-- 
-                    GOOGLE FORMS EMBED INSTRUCTIONS:
-                    1. Create your Google Form with a File Upload question.
-                    2. Click "Send" -> "<>" (Embed HTML).
-                    3. Copy the URL inside 'src="..."'.
-                    4. Paste that URL into the 'src' attribute below.
-                -->
-                <iframe 
-                    src="https://docs.google.com/forms/d/e/1FAIpQLSdRnDmU2tKHfqm8SKFWdqerHGblIsUFkrDwBfOzRjsWimEgXQ/viewform?embedded=true" 
-                    width="100%" 
-                    height="100%" 
-                    frameborder="0" 
-                    marginheight="0" 
-                    marginwidth="0"
-                    class="w-full h-full rounded-[2rem]">
-                    Loading form...
-                </iframe>
+            <!-- Totals -->
+            <table class="w-full mb-8">
+                <thead>
+                    <tr class="border-b border-slate-200">
+                        <th class="text-left py-3 text-xs font-black uppercase text-slate-400">Description</th>
+                        <th class="text-right py-3 text-xs font-black uppercase text-slate-400">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="quote-lines">
+                    <!-- JS will populate this -->
+                </tbody>
+            </table>
+
+            <div class="flex justify-end border-t-2 border-slate-800 pt-6">
+                <div class="text-right">
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Total Fee</p>
+                    <p id="quote-final-total" class="text-4xl font-black text-slate-900 tracking-tighter">$0.00</p>
+                </div>
+            </div>
+            
+            <div class="mt-16 pt-8 border-t border-slate-100 text-center">
+                <p class="text-xs text-slate-400 max-w-lg mx-auto">Preliminary estimate. Final pricing subject to architectural review. Valid for 30 days.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-40 bg-slate-100 text-slate-900 border-t border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-6xl font-black text-slate-900 uppercase tracking-tighter mb-10 leading-[0.9]">Start Your <br><span class="text-blue-800">Project</span></h2>
+            
+            <p class="text-xl text-slate-500 mb-16 leading-relaxed font-medium mx-auto max-w-2xl">
+                Submit your project requirements today for a technical layout estimate. Our team provides expedited, code-compliant fire protection submittal packages coordinated for Professional Engineer review to streamline the permit process.
+            </p>
+            
+            <div class="flex flex-col md:flex-row justify-center gap-12">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="bg-white p-5 rounded-2xl text-slate-700 shadow-sm border border-slate-200"><i data-lucide="mail" size="32"></i></div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Direct Communication:</p>
+                        <p class="text-2xl font-black text-slate-900 tracking-tight">gperalta@cmbfireprotection.com</p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="bg-blue-50 p-5 rounded-2xl text-blue-700 shadow-sm border border-blue-100"><i data-lucide="phone" size="32"></i></div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Inquiry Hotline:</p>
+                        <p class="text-2xl font-black text-slate-900 tracking-tight">732-343-5828</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -338,7 +546,7 @@
                 <!-- Footer Logo -->
                 <div class="p-4 rounded-xl mb-8 shadow-lg" style="background-color: #99adc4;">
                     <img src="logo.png" alt="CMB Fire Protection" class="h-24 w-auto object-contain logo-blend" 
-                         onerror="const p=this.parentElement; if(p){p.style.display='none'; if(p.nextElementSibling)p.nextElementSibling.style.display='block';}">
+                          onerror="const p=this.parentElement; if(p){p.style.display='none'; if(p.nextElementSibling)p.nextElementSibling.style.display='block';}">
                 </div>
                 <div class="hidden bg-blue-800 p-2 rounded-lg mb-6">
                     <i data-lucide="shield" class="h-8 w-8 text-white"></i>
@@ -361,20 +569,194 @@
         lucide.createIcons();
 
         // Mobile Menu Logic
-        const toggle = document.getElementById('menu-toggle');
-        const menu = document.getElementById('mobile-menu');
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
         
-        toggle.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
 
         // Close menu on link click
         document.querySelectorAll('#mobile-menu a').forEach(link => {
             link.addEventListener('click', () => {
-                menu.classList.add('hidden');
+                mobileMenu.classList.add('hidden');
             });
         });
+
+        // --- CALCULATOR LOGIC (PER HEAD TIERED) ---
+        const inputField = document.getElementById('head-count');
+        const peSeal = document.getElementById('pe-seal');
+        const rush = document.getElementById('rush');
+        const rushText = document.getElementById('rush-text');
+        const finalPrice = document.getElementById('final-price');
+        const breakdown = document.getElementById('breakdown');
+        
+        const standardRadios = document.querySelectorAll('.standard-type');
+
+        // Handle Standard selection
+        standardRadios.forEach(r => {
+            r.addEventListener('click', () => {
+                standardRadios.forEach(x => x.classList.remove('active'));
+                r.classList.add('active');
+                r.querySelector('input').checked = true;
+                calculate();
+            });
+        });
+
+        function calculate() {
+            // Get inputs
+            let heads = parseFloat(inputField.value) || 0;
+            if (heads < 0) heads = 0;
+
+            const selectedStandard = document.querySelector('input[name="standard"]:checked');
+            const standardValue = selectedStandard.value; // 13d, 13r, 13
+            
+            let baseTotal = 0;
+            let rushAvailable = true;
+            
+            // --- TIERED CALCULATION LOGIC ---
+            
+            if (heads === 0 && inputField.value === "") {
+                baseTotal = 0;
+            } else {
+                if (standardValue === '13d') {
+                    // NFPA 13D: 2-3 Family
+                    // If 0-50 heads, use promo price ($750). Else standard flat ($1500).
+                    if (heads <= 50) {
+                        baseTotal = 750;
+                    } else {
+                        baseTotal = 1500;
+                    }
+                } else {
+                    // 13R & 13 Tiered Table
+                    if (heads <= 50) {
+                        // Discount only for 13R (half of 2000 = 1000)
+                        // 13 (Commercial) stays 2000
+                        if (standardValue === '13r') {
+                            baseTotal = 1000;
+                        } else {
+                            baseTotal = 2000;
+                        }
+                    } else if (heads <= 100) {
+                        baseTotal = 2500;
+                    } else if (heads <= 300) {
+                        baseTotal = 3000;
+                    } else if (heads <= 500) {
+                        baseTotal = 4000;
+                    } else if (heads <= 750) {
+                        baseTotal = 5000;
+                    } else if (heads <= 1000) {
+                        baseTotal = 6000;
+                    } else {
+                        // Over 1000 heads: $4/head
+                        // Safety: Ensures price doesn't drop below the previous tier ($6000)
+                        baseTotal = Math.max(6000, heads * 4);
+                    }
+                }
+            }
+
+            // --- COMMERCIAL RESTRICTION ---
+            // If NFPA 13 (Commercial) is selected, Rush is allowed ONLY if heads <= 50
+            if (standardValue === '13' && heads > 50) {
+                rushAvailable = false;
+                rush.checked = false;
+                rush.disabled = true;
+                rushText.innerText = "Unavailable for Commercial >50";
+                rush.parentElement.parentElement.classList.add('opacity-50');
+            } else {
+                rushAvailable = true;
+                rush.disabled = false;
+                rushText.innerText = "Guaranteed";
+                rush.parentElement.parentElement.classList.remove('opacity-50');
+            }
+
+            // Calculate Finals
+            let currentTotal = baseTotal;
+            let notes = [];
+            
+            // PE Seal logic
+            if (peSeal.checked) {
+                // If PE Seal is checked, Rush is also unavailable (cannot rush engineering review)
+                rush.checked = false;
+                rush.disabled = true;
+                rushText.innerText = "Unavailable w/ PE";
+                rush.parentElement.parentElement.classList.add('opacity-50');
+                
+                if (baseTotal > 0) {
+                    currentTotal += 750;
+                    notes.push("PE Seal");
+                }
+            } else if (rushAvailable) {
+                // Restore rush if available (either non-commercial or small commercial)
+                rush.disabled = false;
+                rushText.innerText = "Guaranteed";
+                rush.parentElement.parentElement.classList.remove('opacity-50');
+            }
+
+            // Rush logic
+            if (rush.checked && baseTotal > 0) {
+                currentTotal *= 1.15; // 15% Rush fee
+                notes.push("Rush");
+            }
+
+            finalPrice.innerText = "$" + Math.floor(currentTotal).toLocaleString();
+            breakdown.innerText = notes.join(" • ");
+        }
+
+        // --- REPORT LOGIC ---
+        function viewReport() {
+            const heads = inputField.value || 0;
+            const standardElement = document.querySelector('input[name="standard"]:checked');
+            // Find parent label text
+            const standardName = standardElement.parentElement.innerText.trim();
+            const total = finalPrice.innerText;
+            
+            document.getElementById('quote-date').innerText = new Date().toLocaleDateString();
+            document.getElementById('quote-standard').innerText = standardName;
+            document.getElementById('quote-scope').innerText = heads;
+            document.getElementById('quote-final-total').innerText = total;
+
+            // Generate Lines
+            let linesHtml = `
+                <tr>
+                    <td class="py-4 font-bold text-slate-800">Base Design Layout & Hydraulic Calculations Report</td>
+                    <td class="py-4 text-right font-mono font-medium text-slate-700">Included</td>
+                </tr>
+            `;
+            
+            if (peSeal.checked) {
+                linesHtml += `
+                <tr>
+                    <td class="py-4 font-bold text-slate-800">Professional Engineer Review</td>
+                    <td class="py-4 text-right font-mono font-medium text-slate-700">$750.00</td>
+                </tr>`;
+            }
+            if (rush.checked) {
+                linesHtml += `
+                <tr>
+                    <td class="py-4 font-bold text-slate-800">Expedited Rush Fee (15%)</td>
+                    <td class="py-4 text-right font-mono font-medium text-slate-700">Applied</td>
+                </tr>`;
+            }
+
+            document.getElementById('quote-lines').innerHTML = linesHtml;
+
+            // Show UI
+            document.getElementById('quote-template').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeReport() {
+            document.getElementById('quote-template').classList.add('hidden');
+        }
+
+        // Event Listeners
+        inputField.addEventListener('input', calculate);
+        peSeal.addEventListener('change', calculate);
+        rush.addEventListener('change', calculate);
+
+        // Initial Run
+        calculate();
     </script>
 </body>
-
 </html>
